@@ -4,6 +4,7 @@
 *.dll
 *.so
 *.dylib
+closures-in-go
 
 # Test binary, build with `go test -c`
 *.test
