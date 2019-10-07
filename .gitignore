@@ -5,6 +5,8 @@
 *.so
 *.dylib
 closures-in-go
+.idea
+go.sum
 
 # Test binary, build with `go test -c`
 *.test
