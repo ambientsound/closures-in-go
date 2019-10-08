@@ -6,8 +6,14 @@ import (
 	"testing"
 )
 
+var badWords = []string{
+	"beer",
+}
+
 func TestBadWordFilter(t *testing.T) {
-	assert.NoError(t, filters.BadWordFilter("foo to the bar"))
-	assert.NoError(t, filters.BadWordFilter("bar to the baz"))
-	assert.Error(t, filters.BadWordFilter("beer to the belly"))
+	badWordFilter := filters.BadWordFilter(badWords)
+
+	assert.NoError(t, badWordFilter("foo to the bar"))
+	assert.NoError(t, badWordFilter("bar to the baz"))
+	assert.Error(t, badWordFilter("beer to the belly"))
 }

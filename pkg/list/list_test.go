@@ -8,7 +8,7 @@ import (
 )
 
 // Test data fixture
-var myList = list.List{
+var myTODOList = list.List{
 	list.Item{Text: "write a talk", Priority: 10},
 	list.Item{Text: "go to the meetup", Priority: 15},
 	list.Item{Text: "speak at the meetup", Priority: 30},
@@ -23,8 +23,17 @@ func priorityGreaterThan(priority int) func(list.Item) bool {
 	}
 }
 
+// Generate a closure that blocks items where these words are found.
+func withoutWords(words []string) func(list.Item) bool {
+	wordFilter := filters.BadWordFilter(words)
+
+	return func(item list.Item) bool {
+		return nil == wordFilter(item.Text)
+	}
+}
+
 func TestList_Filter(t *testing.T) {
-	filteredList := myList.Filter(priorityGreaterThan(10))
+	importantList := myTODOList.Filter(priorityGreaterThan(10))
 
 	expectedList := list.List{
 		list.Item{Text: "write a talk", Priority: 10},
@@ -32,15 +41,17 @@ func TestList_Filter(t *testing.T) {
 		list.Item{Text: "speak at the meetup", Priority: 30},
 	}
 
-	assert.Equal(t, expectedList, filteredList)
+	assert.Equal(t, expectedList, importantList)
 }
 
-func TestList_Filter_Badwords(t *testing.T) {
-	callback := func(item list.Item) bool {
-		return nil == filters.BadWordFilter(item.Text)
+func TestList_Filter_Many(t *testing.T) {
+	safeImportantList := myTODOList.
+		Filter(priorityGreaterThan(10)).
+		Filter(withoutWords([]string{"meetup"}))
+
+	expectedList := list.List{
+		list.Item{Text: "write a talk", Priority: 10},
 	}
 
-	filteredList := myList.Filter(callback)
-
-	assert.NotContains(t, filteredList, list.Item{Text: "drink beer", Priority: 5})
+	assert.Equal(t, expectedList, safeImportantList)
 }

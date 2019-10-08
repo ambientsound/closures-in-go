@@ -7,9 +7,13 @@ import (
 
 type Filter func(string) error
 
-func BadWordFilter(s string) error {
-	if strings.Contains(s, "beer") {
-		return fmt.Errorf("drugs are not allowed")
+func BadWordFilter(badWords []string) Filter {
+	return func(s string) error {
+		for _, word := range badWords {
+			if strings.Contains(s, word) {
+				return fmt.Errorf("drugs are not allowed")
+			}
+		}
+		return nil
 	}
-	return nil
 }
