@@ -16,12 +16,15 @@ var myList = list.List{
 	list.Item{Text: "sleep", Priority: 0},
 }
 
-func TestList_Filter(t *testing.T) {
-	callback := func(item list.Item) bool {
-		return item.Priority >= 10
+// Generate a closure that filters out items with priority less than N.
+func priorityGreaterThan(priority int) func(list.Item) bool {
+	return func(item list.Item) bool {
+		return item.Priority >= priority
 	}
+}
 
-	filteredList := myList.Filter(callback)
+func TestList_Filter(t *testing.T) {
+	filteredList := myList.Filter(priorityGreaterThan(10))
 
 	expectedList := list.List{
 		list.Item{Text: "write a talk", Priority: 10},
