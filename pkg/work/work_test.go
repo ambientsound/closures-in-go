@@ -5,10 +5,15 @@ import (
 	"testing"
 )
 
-func TestCreate(t *testing.T) {
+// This function demonstrates the use of closures.
+func TestWork(t *testing.T) {
+
+	// Spawn five worker goroutines, and feed them fifty jobs through a channel.
 	ch := make(chan work.Job, 10)
-	work.Distribute(5, ch)
-	work.Create(50, ch)
+	work.SpawnWorkers(5, ch)
+	work.GenerateJobs(50, ch)
+
+	// Wait for all goroutines to exit before terminating
 	close(ch)
 	work.Wait()
 }

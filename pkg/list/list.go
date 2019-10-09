@@ -9,6 +9,8 @@ type Item struct {
 
 type List []Item
 
+// Filter calls a function on each item in the list.
+// Returns a new list where the items having the
 func (list List) Filter(callback func(Item) bool) List {
 	filteredList := make(List, 0)
 

@@ -1,7 +1,6 @@
 package list_test
 
 import (
-	"github.com/ambientsound/closures-in-go/pkg/filters"
 	"github.com/ambientsound/closures-in-go/pkg/list"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -23,15 +22,7 @@ func priorityGreaterThan(priority int) func(list.Item) bool {
 	}
 }
 
-// Generate a closure that blocks items where these words are found.
-func withoutWords(words []string) func(list.Item) bool {
-	wordFilter := filters.BadWordFilter(words)
-
-	return func(item list.Item) bool {
-		return nil == wordFilter(item.Text)
-	}
-}
-
+// Take list items with priority greater than 10 and return them in a new list.
 func TestList_Filter(t *testing.T) {
 	importantList := myTODOList.Filter(priorityGreaterThan(10))
 
@@ -42,16 +33,4 @@ func TestList_Filter(t *testing.T) {
 	}
 
 	assert.Equal(t, expectedList, importantList)
-}
-
-func TestList_Filter_Many(t *testing.T) {
-	safeImportantList := myTODOList.
-		Filter(priorityGreaterThan(10)).
-		Filter(withoutWords([]string{"meetup"}))
-
-	expectedList := list.List{
-		list.Item{Text: "write a talk", Priority: 10},
-	}
-
-	assert.Equal(t, expectedList, safeImportantList)
 }
